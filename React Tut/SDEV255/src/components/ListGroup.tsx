@@ -1,23 +1,34 @@
-import { Fragment } from "react"; //can also use <></> instead of Fragment
-import type { MouseEvent } from "react";
+import { Fragment, useState } from "react"; //can also use <></> instead of Fragment
 
-function ListGroup() {
-  let items = ["Chicago", "Philly", "DC", "Detoit", "Miami"];
+// {items: [], heading: string}
+interface Props {
+  items: string[];
+  heading: string;
+  onSelectItem: (item: string) => void;
+}
+
+function ListGroup(props: Props) {
   
-  const message = items.length === 0 && <p>No items found</p>;
-//event handler
-  const handleClick = (event: MouseEvent) => console.log(event);
+  //Hook
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  
+
+  const message = props.items.length === 0 && <p>No items found</p>;
+
 
   return (
     <Fragment>
-      <h1>List Group</h1>
+      <h1>{props.heading}</h1>
       {message}
         <ul className="list-group">
-          {items.map((item, index) => (
+          {props.items.map((item, index) => (
             <li 
-            className="list-group-item" 
+            className={ selectedIndex === index ? "list-group-item active" : "list-group-item" } 
             key={item} 
-            onClick={handleClick}>
+            onClick={() => {
+                setSelectedIndex(index);
+                props.onSelectItem(item);
+            }}>
               {item}
             </li>
           ))}
